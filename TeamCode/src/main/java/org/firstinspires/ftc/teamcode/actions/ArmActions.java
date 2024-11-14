@@ -40,9 +40,15 @@ public class ArmActions {
         clawPivot = hardwareMap.get(Servo.class, "hooks");
         claw = hardwareMap.get(Servo.class, "claw");
 
+
         leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+/*
+        leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+*/
 
     }
 
@@ -87,6 +93,8 @@ public class ArmActions {
     public Action raiseArm() {
         return new Action() {
             private boolean initialized = false;
+
+
 
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
@@ -153,7 +161,7 @@ public class ArmActions {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    claw.setPosition(0);
+                    claw.setPosition(1);
                 }
 
                 return initialized;
@@ -189,7 +197,7 @@ public class ArmActions {
         };
     }
 
-    public Action lowerArm() {
+    public Action lowerArm(float encoderClicks) {
         return new Action() {
             private boolean initialized = false;
 
@@ -203,7 +211,7 @@ public class ArmActions {
 
                 double pos = leftSlide.getCurrentPosition();
                 packet.put("liftPos", pos);
-                if (pos > 20) {
+                if (pos > encoderClicks) {
                     return true;
                 } else {
                     leftSlide.setPower(0);

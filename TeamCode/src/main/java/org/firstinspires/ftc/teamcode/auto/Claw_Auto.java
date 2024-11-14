@@ -19,13 +19,14 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 import kotlin.jvm.internal.TypeParameterReference;
 
 @Config
-@Autonomous(name = "Claw_Auto", group = "Autonomous")
+@Autonomous(name = "Claw_Autosdlfjdsj", group = "Autonomous")
 public class Claw_Auto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(37, 63, Math.toRadians(180));
+        Pose2d startPose = new Pose2d(-10, 63, Math.toRadians(90));
+        Pose2d subPoseMid = new Pose2d(0, 35, Math.toRadians(90));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
@@ -41,10 +42,7 @@ public class Claw_Auto extends LinearOpMode {
 
 
         TrajectoryActionBuilder traj_1 = drive.actionBuilder(startPose)
-                .stopAndAdd(new SequentialAction(armActions.raiseClaw()))
-                .stopAndAdd(new SequentialAction(armActions.closeClaw()))
-                .stopAndAdd(new SequentialAction(armActions.raiseArm()))
-                .waitSeconds(10);
+                .strafeTo(new Vector2d(subPoseMid.position.x - 10, subPoseMid.position.y + 10));
                 /*
                 //pre-loaded sample
                 .strafeToLinearHeading(bucketPose.position, bucketPose.heading)
@@ -79,23 +77,34 @@ public class Claw_Auto extends LinearOpMode {
 
                  */
 
+        TrajectoryActionBuilder traj_2 = drive.actionBuilder(startPose)
+                        .strafeTo(new Vector2d(startPose.position.x, startPose.position.y));
+
+        Actions.runBlocking(armActions.raiseClaw());
+        Actions.runBlocking(armActions.closeClaw());
 
         while (!isStopRequested() && !opModeIsActive()) {
             telemetry.update();
         }
-
         telemetry.update();
         waitForStart();
 
         if (isStopRequested()) return;
 
         Action trajectory_1;
+        Action trajectory_2;
 
         trajectory_1 = traj_1.build();
+        trajectory_2 = traj_2.build();
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajectory_1
+                        armActions.raiseArm(),
+                        trajectory_1,
+                        armActions.lowerArm(3000),
+                        trajectory_2,
+                        armActions.lowerArm(20),
+                        trajectory_2
                 )
         );
     }
