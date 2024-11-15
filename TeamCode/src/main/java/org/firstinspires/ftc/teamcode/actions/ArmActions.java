@@ -197,7 +197,7 @@ public class ArmActions {
         };
     }
 
-    public Action lowerArm(float encoderClicks) {
+    public Action lowerArm() {
         return new Action() {
             private boolean initialized = false;
 
@@ -211,7 +211,7 @@ public class ArmActions {
 
                 double pos = leftSlide.getCurrentPosition();
                 packet.put("liftPos", pos);
-                if (pos > encoderClicks) {
+                if (pos > 20) {
                     return true;
                 } else {
                     leftSlide.setPower(0);
@@ -220,5 +220,31 @@ public class ArmActions {
                 }
             }
         };
+
+
+    }public Action halfLowerArm() {
+        return new Action() {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    rightSlide.setPower(-0.2);
+                    leftSlide.setPower(-0.2);
+                    initialized = true;
+                }
+
+                double pos = leftSlide.getCurrentPosition();
+                packet.put("liftPos", pos);
+                if (pos > 1500) {
+                    return true;
+                } else {
+                    leftSlide.setPower(0);
+                    rightSlide.setPower(0);
+                    return false;
+                }
+            }
+        };
+
     }
 }
