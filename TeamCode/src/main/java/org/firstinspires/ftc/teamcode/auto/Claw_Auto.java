@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.Auto;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -42,7 +42,7 @@ public class Claw_Auto extends LinearOpMode {
 
 
         TrajectoryActionBuilder traj_1 = drive.actionBuilder(startPose)
-                .strafeTo(new Vector2d(subPoseMid.position.x - 10, subPoseMid.position.y + 10));
+                .strafeTo(new Vector2d(subPoseMid.position.x-10, subPoseMid.position.y + 7));
                 /*
                 //pre-loaded sample
                 .strafeToLinearHeading(bucketPose.position, bucketPose.heading)
@@ -77,17 +77,19 @@ public class Claw_Auto extends LinearOpMode {
 
                  */
 
-        TrajectoryActionBuilder traj_2 = drive.actionBuilder(startPose)
-                        .strafeTo(new Vector2d(startPose.position.x, startPose.position.y));
+        TrajectoryActionBuilder traj_2 = drive.actionBuilder(new Pose2d(-10, 42, Math.toRadians(90)))
+                .waitSeconds(1)
+                .strafeTo(new Vector2d(startPose.position.x, startPose.position.y));
 
-        Actions.runBlocking(armActions.raiseClaw());
-        Actions.runBlocking(armActions.closeClaw());
 
         while (!isStopRequested() && !opModeIsActive()) {
             telemetry.update();
         }
         telemetry.update();
         waitForStart();
+
+        Actions.runBlocking(armActions.raiseClaw());
+        Actions.runBlocking(armActions.closeClaw());
 
         if (isStopRequested()) return;
 
@@ -101,10 +103,13 @@ public class Claw_Auto extends LinearOpMode {
                 new SequentialAction(
                         armActions.raiseArm(),
                         trajectory_1,
-                        armActions.lowerArm(3000),
+                        armActions.halfLowerArm(),
+                        armActions.openClaw(),
                         trajectory_2,
-                        armActions.lowerArm(20),
+
+                        armActions.lowerArm(),
                         trajectory_2
+
                 )
         );
     }
