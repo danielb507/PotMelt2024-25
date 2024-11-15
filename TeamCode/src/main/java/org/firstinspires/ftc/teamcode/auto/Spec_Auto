@@ -27,6 +27,7 @@ public class Spec_Auto extends LinearOpMode {
 
         Pose2d startPose = new Pose2d(-10, 63, Math.toRadians(90));
         Pose2d subPoseMid = new Pose2d(0, 35, Math.toRadians(90));
+        Pose2d parkPose = new Pose2d(-50, 63, Math.toRadians(90));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
@@ -46,10 +47,11 @@ public class Spec_Auto extends LinearOpMode {
 
         TrajectoryActionBuilder traj_2 = drive.actionBuilder(new Pose2d(-10, 42, Math.toRadians(90)))
                 .waitSeconds(1)
-                .strafeTo(new Vector2d(startPose.position.x, startPose.position.y));
+                .strafeTo(new Vector2d(startPose.position.x, startPose.position.y+1));
 
-        TrajectoryActionBuilder traj_3 = drive.actionBuilder(startPose)
-                .strafeTo(new Vector2d(startPose.position.x + 50, startPose.position.y));
+        TrajectoryActionBuilder traj_3 = drive.actionBuilder(new Pose2d(-10, 63, Math.toRadians(90)))
+                .turn(-6.28/4)
+                .strafeTo(new Vector2d(startPose.position.x-20, startPose.position.y));
 
 
 
@@ -82,6 +84,7 @@ public class Spec_Auto extends LinearOpMode {
                         trajectory_2,
                         armActions.lowerArm(),
                         trajectory_3
+
                 )
         );
     }
