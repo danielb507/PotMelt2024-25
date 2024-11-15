@@ -42,6 +42,7 @@ public class Claw_Auto extends LinearOpMode {
 
 
         TrajectoryActionBuilder traj_1 = drive.actionBuilder(startPose)
+                .waitSeconds(4)
                 .strafeTo(new Vector2d(subPoseMid.position.x-10, subPoseMid.position.y + 7));
                 /*
                 //pre-loaded sample
