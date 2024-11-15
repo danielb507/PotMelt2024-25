@@ -19,8 +19,8 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 import kotlin.jvm.internal.TypeParameterReference;
 
 @Config
-@Autonomous(name = "Claw_Auto", group = "Autonomous")
-public class Claw_Auto extends LinearOpMode {
+@Autonomous(name = "Spec_Auto", group = "Autonomous")
+public class Spec_Auto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -43,7 +43,6 @@ public class Claw_Auto extends LinearOpMode {
 
 
         TrajectoryActionBuilder traj_1 = drive.actionBuilder(startPose)
-                .waitSeconds(4)
                 .strafeTo(new Vector2d(subPoseMid.position.x-10, subPoseMid.position.y + 7));
 
         TrajectoryActionBuilder traj_2 = drive.actionBuilder(new Pose2d(-10, 42, Math.toRadians(90)))
@@ -51,8 +50,8 @@ public class Claw_Auto extends LinearOpMode {
                 .strafeTo(new Vector2d(startPose.position.x, startPose.position.y+1));
 
         TrajectoryActionBuilder traj_3 = drive.actionBuilder(new Pose2d(-10, 63, Math.toRadians(90)))
-                .turn(6.28/4)
-                .strafeTo(new Vector2d(startPose.position.x+20, startPose.position.y));
+                .turn(-6.28/4)
+                .strafeTo(new Vector2d(startPose.position.x-20, startPose.position.y));
 
 
 
